@@ -1,6 +1,13 @@
-
-
-
+#' extract betas
+#'
+#' @param x is the model for extract betas. is object result run the function INLA::inla
+#' @param name is to indicate of count modeling or modeling binary data. Is the exponentiate of slope as Odds Ratio (OR) of Incidence Rate Ratio (IRR)
+#' @param link is to indicate the link for binary o count family distribution.
+#'
+#' @return a dataframe
+#' @export
+#'
+#' @examples
 extract_betas <- function(x, name, link) {
     #y <- x$summary.fixed[2, -c( 4, 6,7)]
     y <- x$summary.fixed
@@ -21,43 +28,43 @@ extract_betas <- function(x, name, link) {
             y$OR <- exp(y[,1])
             y$OR_lower <- exp(y[,3])
             y$OR_upper <- exp(y[,5])
-            y 
-            
+            y
+
         } else if("probit" ==  link) {
             y$OR <- y[,1]
             y$OR_lower <- y[,3]
             y$OR_upper <- y[,5]
-            y 
-            
+            y
+
         } else if ("cloglog" ==  link) {
             y$OR <- 1 - exp(-exp(y[,1]))
             y$OR_lower <- 1 - exp(-exp(y[,3]))
             y$OR_upper <- 1 - exp(-exp(y[,5]))
-            y 
+            y
         } else if ("loglog" ==  link){
             y$OR <- exp(-exp(-y[,1]))
             y$OR_lower <- exp(-exp(-y[,3]))
             y$OR_upper <- exp(-exp(-y[,5]))
-            y  
+            y
         } else if ("log" ==  link){
             y$OR <- exp(y[,1])
             y$OR_lower <- exp(y[,3])
             y$OR_upper <- exp(y[,5])
-            y 
+            y
         } else if ("cauchit" ==  link){
             y$OR <- y[,1]
             y$OR_lower <- y[,3]
             y$OR_upper <- y[,5]
-            y 
+            y
         } else if ("identity" ==  link){
             y$OR <- y[,1]
             y$OR_lower <- y[,3]
             y$OR_upper <- y[,5]
-            y 
+            y
         }
     }
-    
-    cbind(y[2, c(1,3, 5, 8,9,10)], 
+
+    cbind(y[2, c(1,3, 5, 8,9,10)],
           data.frame(dic = x$dic$dic,
                      link = link))
 }
